@@ -1,4 +1,4 @@
 # gmGafferTools
 Tools for use with the Gaffer VFX framework.
 
-
+d:\GM\myGaffer\gaffer-0.54.1.0-windows\bin
