@@ -12,6 +12,9 @@ def testFeedback( feedbackWidget, output):
 
 
 def buildABox( source ):
+
+    # from Tom's blog post, just using as an example
+
     # The box
     root = GafferUI.Editor.scriptNode( source )
 
@@ -52,3 +55,13 @@ def buildABox( source ):
     boxOutNode = boxOutPlug.getInput().node()
     boxInNode = boxInPlug.outputs()[0].node()
     boxOutNode["passThrough"].setInput( boxInNode["out"] )
+
+def actionOnSelection( source, feedbackWidget ):
+
+    scriptNode = GafferUI.Editor.scriptNode(source)
+
+    sel = scriptNode.selection()
+    if len(sel) == 0:
+        return
+    for s in sel:
+        feedbackWidget.appendText(str( s ) )

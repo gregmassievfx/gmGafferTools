@@ -70,6 +70,6 @@ class ToolboxUI(GafferUI.Editor):
     def __button2Action(self, button):
         Toolbox.testButton( "yep, hit button 2")
         Toolbox.testFeedback( self.__feedbackWidget, "apple" )
-
+        Toolbox.actionOnSelection( self, self.__feedbackWidget)
 
 GafferUI.Editor.registerType("Toolbox", ToolboxUI)
