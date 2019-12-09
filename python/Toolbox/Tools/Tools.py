@@ -65,3 +65,12 @@ def actionOnSelection( source, feedbackWidget ):
         return
     for s in sel:
         feedbackWidget.appendText(str( s ) )
+
+# def getSelection( source ):
+#     scriptNode = GafferUI.Editor.scriptNode( source )
+#
+#     sel = scriptNode.selection()
+#     if len(sel) == 0:
+#         return None
+#     else:
+#         return sel
