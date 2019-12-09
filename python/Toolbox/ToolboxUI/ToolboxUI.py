@@ -51,6 +51,7 @@ class ToolboxUI(GafferUI.Editor):
                 with GafferUI.ListContainer(spacing=5, borderWidth=5) as self.__toolboxContainer2:
                     self.__tab1Container.setLabel(self.__toolboxContainer2, "Colour")
 
+
                     ############# COLOUR GRID ##############
                     with GafferUI.GridContainer() as self.__colorGrid:
                         gridSize = (6,6)
