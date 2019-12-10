@@ -54,29 +54,14 @@ class ToolboxUI(GafferUI.Editor):
 
                     ############# COLOUR GRID ##############
                     with GafferUI.GridContainer() as self.__colorGrid:
-                        gridSize = (6,6)
+                        gridSize = (7,7)
                         for i in range(0, gridSize[0]):
                             for j in range(0, gridSize[1]):
-                                HSV = imath.Color3f( (1.0 / gridSize[0]) * i, 0.5, (1.0 / gridSize[1]) * j)
+                                HSV = imath.Color4f( (1.0 / gridSize[0]) * float(i), 0.9, 1.0 - ((1.0 / gridSize[1]) * float(j)), 1.0)
                                 RGB = HSV.hsv2rgb()
-                                self.__colorGrid[i, j] = GafferUI.Button(text=( str(round(RGB[0],2) ) + " " + str(round(RGB[1],2) ) + " " + str(round(RGB[2], 2) ) ) )
+                                self.__colorGrid[i, j] = GafferUI.ColorSwatch( RGB )
 
-                                # somehow set the color of the buttons
                                 # later I will need to get these colours from the button to set the node colours
-
-
-
-
-                        for d in dir (self.__colorGrid[0,0]):
-                            print d
-
-                        # self.__colorGrid[0, 0].setHasFrame( True )
-                        # self.__colorGrid[0,0]._setStyleSheet = QtGui.QColor(100, 10, 50 )
-                        # dir (self.__colorGrid[0,0]._qtColor)
-                        # QtGui.QPalette( QtWidgets.QApplication.instance().palette(self._qtWidget()))
-                        # self.__colorGrid[0,0]._Button__palette.setColor(QtGui.QPalette.Enabled, QtGui.QPalette.Light, QtGui.QColor(100, 10, 50 ))
-                        # self.__colorGrid[0, 0]._Button__palette.setColor(QtGui.QPalette.Light, QtGui.QColor(100, 10, 50))
-                        # self._qtWidget().setPalette(self.__colorGrid[0,0]._Button__palette)
 
 
                     GafferUI.Label("Some test buttons 2")
