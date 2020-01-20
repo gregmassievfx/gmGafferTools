@@ -190,4 +190,5 @@ class ToolboxUI(GafferUI.Editor):
             Toolbox.selectNodes(self, "SE")
 
 
+
 GafferUI.Editor.registerType("Toolbox", ToolboxUI)

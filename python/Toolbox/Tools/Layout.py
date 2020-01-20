@@ -5,6 +5,7 @@ import imath
 import Toolbox
 
 
+
 def selectNodes(button, quadrant):
 
     scriptNode = GafferUI.Editor.scriptNode(button)
