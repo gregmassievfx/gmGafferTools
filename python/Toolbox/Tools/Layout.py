@@ -5,6 +5,43 @@ import imath
 import Toolbox
 
 
+def selectNodes(button, quadrant):
+
+    scriptNode = GafferUI.Editor.scriptNode(button)
+    # for d in dir(scriptNode):
+    #     print d
+    sel = scriptNode.selection()
+
+    if len(sel) == 0:
+         print "nothing selected"
+         return
+
+    if quadrant == "NW":
+        print "yeah2", quadrant
+    elif quadrant == "N":
+        print "yeah2", quadrant
+    elif quadrant == "NE":
+        print "yeah2", quadrant
+    elif quadrant == "W":
+        print "yeah2", quadrant
+    elif quadrant == "E":
+        print "yeah2", quadrant
+    elif quadrant == "SW":
+        print "yeah2", quadrant
+    elif quadrant == "S":
+        print "yeah2", quadrant
+    elif quadrant == "SE":
+        print "yeah2", quadrant
+
+
+
+
+    #sourceNode = sel[0]
+
+
+
+
+
 def moveNodes(button, quadrant, offset, includeSourceNode=False):
     """Moves nodes in a consistent way for clean layout"""
 

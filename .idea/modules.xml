@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/gmGafferTools.iml" filepath="$PROJECT_DIR$/.idea/gmGafferTools.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../myPython/pyQtLearning/.idea/pyQtLearning.iml" filepath="$PROJECT_DIR$/../../myPython/pyQtLearning/.idea/pyQtLearning.iml" />
     </modules>
   </component>
 </project>
