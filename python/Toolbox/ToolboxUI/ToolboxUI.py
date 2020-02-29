@@ -31,64 +31,59 @@ class ToolboxUI(GafferUI.Editor):
                 with GafferUI.ListContainer(spacing=5, borderWidth=5) as self.__toolboxContainer1:
                     self.__tab1Container.setLabel(self.__toolboxContainer1, "Layout")
 
-
-                    ############# ARROW GRID ##############
-                    with GafferUI.GridContainer() as self.__colorGrid:
-                        gridSize = (7,3)
-
-                        self.__selectorNWButton = GafferUI.Button(text="\xf0\x9f\xa1\xbc", parenting={"index": (1, 1)})
-                        self.__selectorNWButton.clickedSignal().connect(self.__selectorAction, scoped=False)
-                        self.__selectorNButton =  GafferUI.Button(text="\xf0\x9f\xa1\xb9", parenting={"index": (2, 1)})
-                        self.__selectorNButton.clickedSignal().connect(self.__selectorAction, scoped=False)
-                        self.__selectorNEButton = GafferUI.Button(text="\xf0\x9f\xa1\xbd", parenting={"index": (3, 1)})
-                        self.__selectorNEButton.clickedSignal().connect(self.__selectorAction, scoped=False)
-
-                        self.__selectorWButton =  GafferUI.Button(text="\xf0\x9f\xa1\xb8", parenting={"index": (1, 2)})
-                        self.__selectorWButton.clickedSignal().connect(self.__selectorAction, scoped=False)
-                        self.__selectorEButton =  GafferUI.Button(text="\xf0\x9f\xa1\xba", parenting={"index": (3, 2)})
-                        self.__selectorEButton.clickedSignal().connect(self.__selectorAction, scoped=False)
-
-                        self.__selectorSWButton = GafferUI.Button(text="\xf0\x9f\xa1\xbf", parenting={"index": (1, 3)})
-                        self.__selectorSWButton.clickedSignal().connect(self.__selectorAction, scoped=False)
-                        self.__selectorSButton =  GafferUI.Button(text="\xf0\x9f\xa1\xbb", parenting={"index": (2, 3)})
-                        self.__selectorSButton.clickedSignal().connect(self.__selectorAction, scoped=False)
-                        self.__selectorSEButton = GafferUI.Button(text="\xf0\x9f\xa1\xbe", parenting={"index": (3, 3)})
-                        self.__selectorSEButton.clickedSignal().connect(self.__selectorAction, scoped=False)
-
-                        GafferUI.Label(" select ", parenting={"index": (2, 2)})
-                        GafferUI.Label("  move  ", parenting={"index": (6, 2)})
-
-                        #spacer between selector and mover buttons
-                        GafferUI.Label("              ", parenting={"index": (4, 1)} )
-
-                        self.__moverNWButton = GafferUI.Button(text="\xf0\x9f\xa1\xbc", parenting={"index": (5, 1)})
-                        self.__moverNButton =  GafferUI.Button(text="\xf0\x9f\xa1\xb9", parenting={"index": (6, 1)})
-                        self.__moverNEButton = GafferUI.Button(text="\xf0\x9f\xa1\xbd", parenting={"index": (7, 1)})
-
-                        self.__moverWButton =  GafferUI.Button(text="\xf0\x9f\xa1\xb8", parenting={"index": (5, 2)})
-                        self.__moverEButton =  GafferUI.Button(text="\xf0\x9f\xa1\xba", parenting={"index": (7, 2)})
-
-                        self.__moverSWButton = GafferUI.Button(text="\xf0\x9f\xa1\xbf", parenting={"index": (5, 3)})
-                        self.__moverSButton =  GafferUI.Button(text="\xf0\x9f\xa1\xbb", parenting={"index": (6, 3)})
-                        self.__moverSEButton = GafferUI.Button(text="\xf0\x9f\xa1\xbe", parenting={"index": (7, 3)})
+                    directions = (
+                        # direction, ascii, position
+                        ( "NW", "\xf0\x9f\xa1\xbc", (1, 1)),
+                        ( "N",  "\xf0\x9f\xa1\xb9", (2, 1)),
+                        ( "NE", "\xf0\x9f\xa1\xbd", (3, 1)),
+                        ( "W",  "\xf0\x9f\xa1\xb8", (1, 2)),
+                        ( None, None, (2, 2)),
+                        ( "E",  "\xf0\x9f\xa1\xba", (3, 2)),
+                        ( "SW", "\xf0\x9f\xa1\xbf", (1, 3)),
+                        ( "S",  "\xf0\x9f\xa1\xbb", (2, 3)),
+                        ( "SE", "\xf0\x9f\xa1\xbe", (3, 3))
+                    )
 
 
+                    with GafferUI.GridContainer() as self.__moverGrid:
+                        GafferUI.Label( "Select",  parenting={"index": (1,1)} )
+                        GafferUI.Label( "      ",  parenting={"index": (2,1)} )
+                        GafferUI.Label( "Move",  parenting={"index": (3,1)} )
+                        GafferUI.Label("      ", parenting={"index": (4, 1)})
 
-                    with GafferUI.ListContainer(spacing=1, borderWidth=1, orientation=GafferUI.ListContainer.Orientation.Horizontal) as self.__moverContainer1:
 
-                        self.__moverButton = GafferUI.Button(text="Move Nodes")
-                        self.__moverButton.clickedSignal().connect( self.__moverAction, scoped=False)
+                        ############# SELECTOR ARROW GRID ##############
+                        with GafferUI.GridContainer( parenting={"index": (1,2)} ) as self.__selectorGrid:
 
-                        GafferUI.Label( "quadrant")
-                        self.__moverQuadrantText = GafferUI.TextWidget( "S" )
-                        GafferUI.Label( "x")
-                        self.__moverDirectionX = GafferUI.NumericWidget( 10 )
-                        GafferUI.Label( "y")
-                        self.__moverDirectionY = GafferUI.NumericWidget( 10  )
-                        GafferUI.Label( "include selection")
-                        self.__moverIncludeSelection = GafferUI.BoolWidget( checked=True, displayMode=GafferUI.BoolWidget.DisplayMode.CheckBox  )
+                            for direction in directions:
 
-                    self.__divider1 = GafferUI.Divider(GafferUI.Divider.Orientation.Horizontal)
+                                if direction[0] != None:
+
+                                    GafferUI.Button( text=direction[1], parenting={ "index": (direction[2]) } )
+                                    self.__selectorGrid[ direction[2] ]._qtWidget().setMinimumWidth(25)
+                                    self.__selectorGrid[ direction[2] ]._qtWidget().setMaximumWidth(25)
+                                    self.__selectorGrid[ direction[2] ]._qtWidget().setProperty( "myDirection", direction[0])
+                                    self.__selectorGrid[ direction[2] ].clickedSignal().connect(self.__selectorAction, scoped=False)
+
+                        ############# MOVER ARROW GRID ##############
+                        with GafferUI.GridContainer( parenting={"index": (3,2)} ) as self.__moverGrid:
+
+                            for direction in directions:
+
+                                if direction[0] != None:
+
+                                    GafferUI.Button( text=direction[1], parenting={ "index": (direction[2]) } )
+                                    self.__moverGrid[ direction[2] ]._qtWidget().setMinimumWidth(25)
+                                    self.__moverGrid[ direction[2] ]._qtWidget().setMaximumWidth(25)
+                                    self.__moverGrid[ direction[2] ]._qtWidget().setProperty( "myDirection", direction[0])
+                                    self.__moverGrid[ direction[2] ].clickedSignal().connect(self.__moverAction, scoped=False)
+
+                        ############# SELECT/MOVE OPTIONS ##############
+                        with GafferUI.ListContainer( orientation= GafferUI.ListContainer.Orientation.Vertical, parenting={"index": (5, 2)}) as self.__LayoutOptions:
+
+                            self.__limitToBackdropsCheckbox = GafferUI.BoolWidget( text="Limit Selection to Backdrops", checked=True )
+                            self.__extendBackdropsCheckbox = GafferUI.BoolWidget(text="Extend Backdrops", checked=True )
+
 
                 ############# COLOUR TAB ##############
                 with GafferUI.ListContainer(spacing=5, borderWidth=5) as self.__toolboxContainer2:
@@ -97,97 +92,43 @@ class ToolboxUI(GafferUI.Editor):
 
                     ############# COLOUR GRID ##############
                     with GafferUI.GridContainer() as self.__colorGrid:
-                        gridSize = (7,7)
+                        gridSize = (10,5)
                         for i in range(0, gridSize[0]):
                             for j in range(0, gridSize[1]):
-                                HSV = imath.Color4f( (1.0 / gridSize[0]) * float(i), 0.6, 1.0 - ((1.0 / gridSize[1]) * float(j)), 1.0)
+                                HSV = imath.Color4f( (1.0 / gridSize[0]) * float(i), 0.5, 1.0 - ((1.0 / gridSize[1]) * float(j)), 1.0)
                                 RGB = HSV.hsv2rgb()
-                                GafferUI.ColorSwatch(RGB, useDisplayTransform=False, parenting = {"index": (i,j)})
-
-                                # later I will need to get these colours from the button to set the node colours
-
-
-                    GafferUI.Label("Some test buttons 2")
-                    # create action buttons
-                    self.__buttonTest3 = GafferUI.Button(text="my button1")
-                    self.__buttonTest3.clickedSignal().connect(self.__button1Action, scoped=False)
-
-                    self.__divider1 = GafferUI.Divider(GafferUI.Divider.Orientation.Horizontal)
-
-                    self.__buttonTest4 = GafferUI.Button(text="my button2")
-                    self.__buttonTest4.clickedSignal().connect(self.__button2Action, scoped=False)
+                                GafferUI.ColorSwatch (RGB , useDisplayTransform=False, parenting = {"index": (i,j)})
+                                self.__colorGrid[i,j]._qtWidget().setMaximumHeight( 20 )
+                                self.__colorGrid[i,j].buttonPressSignal().connect(self.__setColourAction, scoped=False)
 
 
-        ############# FEEDBACK WINDOW ##############
-        with self.__splittable:
 
-            self.__feedbackWidget = GafferUI.MultiLineTextWidget(
-                text="Toolbox Feedback",
-                editable=False,
-                wrapMode=GafferUI.MultiLineTextWidget.WrapMode.None,
-                role=GafferUI.MultiLineTextWidget.Role.Code,
-            )
+                #
+                # ############# SEARCH AND REPLACE TAB ##############
+                # with GafferUI.ListContainer(spacing=5, borderWidth=5) as self.__toolboxContainer3:
+                #     self.__tab1Container.setLabel(self.__toolboxContainer3, "Search and Replace")
+                #
+                #     with GafferUI.GridContainer() as self.__findReplaceGrid:
+                #
+                #         self.__findLabel = GafferUI.Label( "Find",  horizontalAlignment=GafferUI.Label.HorizontalAlignment.Right, parenting={"index": (1, 1)} )
+                #         self.__findWidget = GafferUI.TextWidget( text="Find")
+                #         self.__replaceWidget = GafferUI.TextWidget( text="Replace")
+                #
+                #
+                #
 
-            self.__feedbackWidget._qtWidget().setProperty("gafferTextRole", "output")
-            # how on earth do I change the colour?!
-
-
-    def outputWidget(self):
-        return self.__outputWidget
-
-    def __button1Action(self, button):
-        Toolbox.testButton( "yep, hit button 1")
-        Toolbox.testFeedback(self.__feedbackWidget, "banana")
-        Toolbox.buildABox( self )
-
-    def __button2Action(self, button):
-        Toolbox.testButton( "yep, hit button 2")
-        Toolbox.testFeedback( self.__feedbackWidget, "apple" )
-        Toolbox.actionOnSelection( self, self.__feedbackWidget)
-
-    def __moverAction(self, button):
-        Toolbox.testFeedback(self.__feedbackWidget, "yep, hit mover button")
-        Toolbox.moveNodes(
-            self,
-            self.__moverQuadrantText.getText(),
-            (self.__moverDirectionX.getValue(), self.__moverDirectionY.getValue()),
-            includeSourceNode=self.__moverIncludeSelection.getState()
-        )
 
     def __selectorAction(self , button ):
 
-        #Toolbox.selectNodes(self, "N")
-        if button == self.__selectorNWButton:
+        Toolbox.selectNodes(self, button._qtWidget().property( "myDirection") )
 
-            Toolbox.selectNodes( self, "NW")
+    def __moverAction(self, button):
 
-        elif button == self.__selectorNButton:
+        Toolbox.moveNodes(self, button._qtWidget().property ("myDirection") )
 
-            Toolbox.selectNodes(self, "N")
+    def __setColourAction( self, button, buttonEvent):
 
-        elif button == self.__selectorNEButton:
-
-            Toolbox.selectNodes(self, "NE")
-
-        elif button == self.__selectorWButton:
-
-            Toolbox.selectNodes(self, "W")
-
-        elif button == self.__selectorEButton:
-
-            Toolbox.selectNodes(self, "E")
-
-        elif button == self.__selectorSWButton:
-
-            Toolbox.selectNodes(self, "SW")
-
-        elif button == self.__selectorSButton:
-
-            Toolbox.selectNodes(self, "S")
-
-        elif button == self.__selectorSEButton:
-
-            Toolbox.selectNodes(self, "SE")
+        Toolbox.setNodeColourFromSwatch( self, button )
 
 
 

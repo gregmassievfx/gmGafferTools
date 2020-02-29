@@ -6,114 +6,128 @@ import Toolbox
 
 
 
-def selectNodes(button, quadrant):
+def selectNodes( editor, quadrant):
 
-    scriptNode = GafferUI.Editor.scriptNode(button)
-    # for d in dir(scriptNode):
-    #     print d
-    sel = scriptNode.selection()
+    scriptNode = GafferUI.Editor.scriptNode( editor)
 
-    if len(sel) == 0:
+    selection = scriptNode.selection()
+
+    if len(selection) == 0:
          print "nothing selected"
          return
 
-    if quadrant == "NW":
-        print "yeah2", quadrant
-    elif quadrant == "N":
-        print "yeah2", quadrant
-    elif quadrant == "NE":
-        print "yeah2", quadrant
-    elif quadrant == "W":
-        print "yeah2", quadrant
-    elif quadrant == "E":
-        print "yeah2", quadrant
-    elif quadrant == "SW":
-        print "yeah2", quadrant
-    elif quadrant == "S":
-        print "yeah2", quadrant
-    elif quadrant == "SE":
-        print "yeah2", quadrant
+    sourceNode = selection[0]
+    sX = sourceNode["__uiPosition"].getValue()[0]
+    sY = sourceNode["__uiPosition"].getValue()[1]
+
+    parent = sourceNode.parent()
+    children = parent.children( Gaffer.Node )
+
+    for child in children:
+
+        cX = child["__uiPosition"].getValue()[0]
+        cY = child["__uiPosition"].getValue()[1]
+
+        if quadrant == "NW" and cX < sX and cY > sY:
+
+            selection.add( child )
+
+        elif quadrant == "N" and cY > sY:
+
+            selection.add( child )
+
+        elif quadrant == "NE" and cX > sX and cY > sY:
+
+            selection.add( child )
+
+        elif quadrant == "W" and cX < sX:
+
+            selection.add( child )
+
+        elif quadrant == "E" and cX > sX:
+
+            selection.add( child )
+
+        elif quadrant == "SW" and cX < sX and cY < sY:
+
+            selection.add( child )
+
+        elif quadrant == "S" and cY < sY:
+
+            selection.add( child )
+
+        elif quadrant == "SE" and cX > sX and cY < sY:
+
+            selection.add( child )
 
 
 
-
-    #sourceNode = sel[0]
-
-
-
-
-
-def moveNodes(button, quadrant, offset, includeSourceNode=False):
+def moveNodes(editor, quadrant ):
     """Moves nodes in a consistent way for clean layout"""
 
-    scriptNode = GafferUI.Editor.scriptNode(button)
-    sel = scriptNode.selection()
-    if len(sel) == 0:
+    scriptNode = GafferUI.Editor.scriptNode( editor )
+
+    selection = scriptNode.selection()
+
+    offset = 10
+
+    if len(selection) == 0:
         return
 
-    sourceNode = sel[0]
+    with Gaffer.UndoScope( scriptNode ):
+        
+        for node in selection:
+
+            nodePosition = node["__uiPosition"].getValue()
+
+            if quadrant == "NW":
+
+                node["__uiPosition"].setValue(imath.V2f((nodePosition[0] - offset), (nodePosition[1] + offset)))
+
+            elif quadrant == "N":
+
+                node["__uiPosition"].setValue(imath.V2f((nodePosition[0]), (nodePosition[1] + offset)))
+
+            elif quadrant == "NE":
+
+                node["__uiPosition"].setValue(imath.V2f((nodePosition[0] + offset), (nodePosition[1] + offset)))
+
+            elif quadrant == "W":
+
+                node["__uiPosition"].setValue(imath.V2f((nodePosition[0] - offset), (nodePosition[1])))
+
+            elif quadrant == "E":
+
+                node["__uiPosition"].setValue(imath.V2f((nodePosition[0] + offset), (nodePosition[1])))
+
+            elif quadrant == "SW":
+
+                node["__uiPosition"].setValue(imath.V2f((nodePosition[0] - offset), (nodePosition[1] - offset)))
+
+            elif quadrant == "S":
+
+                node["__uiPosition"].setValue(imath.V2f((nodePosition[0]), (nodePosition[1] - offset)))
+
+            elif quadrant == "SE":
+
+                node["__uiPosition"].setValue(imath.V2f((nodePosition[0] + offset), (nodePosition[1] - offset)))
 
 
 
-    print "XXXXXXXXXXXXX", sourceNode, type(sourceNode)
+def setNodeColourFromSwatch( editor, button ):
 
-    sourceNodePosition = sourceNode["__uiPosition"].getValue()
-    parent = sourceNode.parent()
+    scriptNode = GafferUI.Editor.scriptNode( editor )
 
+    selection = scriptNode.selection()
 
-    with Gaffer.UndoScope(parent):
+    if len(selection) == 0:
+        return
 
-        children = parent.children()
+    with Gaffer.UndoScope(scriptNode):
 
-        for child in children:
-            if type(child) == Gaffer.Box:
+        for node in selection:
 
-                if includeSourceNode == False and child == sourceNode:
+            swatchColour = button.getColor()
+            colour = imath.Color3f( swatchColour[0], swatchColour[1], swatchColour[2] )
 
-                    pass
-
-                else:
-
-                    childPosition = child["__uiPosition"].getValue()
-
-                    if quadrant == "N" and childPosition[1] >= sourceNodePosition[1]:
-
-                        child["__uiPosition"].setValue( imath.V2f((childPosition[0]), (childPosition[1] + offset[1])))
-
-                    elif quadrant == "NE" and childPosition[0] >= sourceNodePosition[0] and childPosition[1] >= sourceNodePosition[1]:
-
-                        child["__uiPosition"].setValue( imath.V2f((childPosition[0] + offset[0]), (childPosition[1] + offset[1])))
-
-                    elif quadrant == "E" and childPosition[0] >= sourceNodePosition[0]:
-
-                        child["__uiPosition"].setValue( imath.V2f((childPosition[0] + offset[0]), (childPosition[1])))
-
-                    elif quadrant == "SE" and childPosition[0] >= sourceNodePosition[0] and childPosition[1] <= sourceNodePosition[1]:
-
-                        child["__uiPosition"].setValue( imath.V2f((childPosition[0] + offset[0]), (childPosition[1] - offset[1])))
-
-                    elif quadrant == "S" and childPosition[1] <= sourceNodePosition[1]:
-
-                        child["__uiPosition"].setValue( imath.V2f((childPosition[0]), (childPosition[1] - offset[1])))
-
-                    elif quadrant == "SW" and childPosition[0] <= sourceNodePosition[0] and childPosition[1] <= sourceNodePosition[1]:
-
-                        child["__uiPosition"].setValue( imath.V2f((childPosition[0] - offset[0]), (childPosition[1] - offset[1])))
-
-                    elif quadrant == "W" and childPosition[0] <= sourceNodePosition[0]:
-
-                        child["__uiPosition"].setValue( imath.V2f((childPosition[0] - offset[0]), (childPosition[1])))
-
-                    elif quadrant == "NW" and childPosition[0] <= sourceNodePosition[0] and childPosition[1] >= sourceNodePosition[1]:
-
-                        child["__uiPosition"].setValue( imath.V2f((childPosition[0] - offset[0]), (childPosition[1] + offset[1])))
-
-
-# moveNodes( root['Box1'], ["N",], (10,10), includeSourceNode=True)
-# moveNodes( root['Box1'], ["NE",], (10,10), includeSourceNode=True)
-# moveNodes( root['Box1'], ["E",], (10,10), includeSourceNode=True)
-# moveNodes( root['Box1'], ["SE",], (10,10), includeSourceNode=True)
-# moveNodes( root['Box1'], ["S",], (10,10), includeSourceNode=True)
-# moveNodes( root['Box1'], ["SW",], (10,10), includeSourceNode=True)
-# moveNodes( root['Box1'], ["W",], (10,10), includeSourceNode=True)
-# moveNodes( root['Box1'], ["NW",], (10,10), includeSourceNode=True)
+            Gaffer.Metadata.registerValue(node, "nodeGadget:color",  colour )
