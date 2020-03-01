@@ -4,8 +4,6 @@ import GafferScene
 import imath
 import Toolbox
 
-
-
 def selectNodes( editor, quadrant):
 
     scriptNode = GafferUI.Editor.scriptNode( editor)

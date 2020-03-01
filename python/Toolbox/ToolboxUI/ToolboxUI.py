@@ -103,19 +103,43 @@ class ToolboxUI(GafferUI.Editor):
 
 
 
-                #
-                # ############# SEARCH AND REPLACE TAB ##############
-                # with GafferUI.ListContainer(spacing=5, borderWidth=5) as self.__toolboxContainer3:
-                #     self.__tab1Container.setLabel(self.__toolboxContainer3, "Search and Replace")
-                #
-                #     with GafferUI.GridContainer() as self.__findReplaceGrid:
-                #
-                #         self.__findLabel = GafferUI.Label( "Find",  horizontalAlignment=GafferUI.Label.HorizontalAlignment.Right, parenting={"index": (1, 1)} )
-                #         self.__findWidget = GafferUI.TextWidget( text="Find")
-                #         self.__replaceWidget = GafferUI.TextWidget( text="Replace")
-                #
-                #
-                #
+
+                ############# SEARCH AND REPLACE TAB ##############
+                with GafferUI.ListContainer(spacing=5, borderWidth=5) as self.__toolboxContainer3:
+                    self.__tab1Container.setLabel(self.__toolboxContainer3, "Search and Replace")
+
+                    spacing = 100
+                    with GafferUI.ListContainer(spacing=5, borderWidth=5,orientation= GafferUI.ListContainer.Orientation.Horizontal)  as self.__searchList:
+
+                        self.__searchLabel = GafferUI.Label("Search For", horizontalAlignment=GafferUI.Label.HorizontalAlignment.Right)
+                        self.__searchLabel._qtWidget().setMinimumWidth(spacing)
+                        self.__searchLabel._qtWidget().setMaximumWidth(spacing)
+                        self.__searchWidget = GafferUI.TextWidget(text="myTest")
+
+                    with GafferUI.ListContainer(spacing=5, borderWidth=5,orientation= GafferUI.ListContainer.Orientation.Horizontal)  as self.__replaceList:
+
+                        self.__replaceLabel = GafferUI.Label("Replace With", horizontalAlignment=GafferUI.Label.HorizontalAlignment.Right)
+                        self.__replaceLabel._qtWidget().setMinimumWidth(spacing)
+                        self.__replaceLabel._qtWidget().setMaximumWidth(spacing)
+                        self.__replaceWidget = GafferUI.TextWidget( text="banana")
+
+                    with GafferUI.ListContainer(spacing=5, borderWidth=5, orientation=GafferUI.ListContainer.Orientation.Horizontal)  as self.__searchReplaceList:
+
+                        self.__searchReplaceNodePlugsMenu = GafferUI.SelectionMenu()
+                        self.__searchReplaceNodePlugsMenu.addItem("Node Names")
+                        self.__searchReplaceNodePlugsMenu.addItem("Plug Values")
+                        self.__searchReplaceNodePlugsMenu._qtWidget().setMinimumWidth(spacing)
+                        self.__searchReplaceNodePlugsMenu._qtWidget().setMaximumWidth(spacing)
+
+                        self.__searchReplaceScopeMenu = GafferUI.SelectionMenu()
+                        self.__searchReplaceScopeMenu.addItem("In Selected Nodes")
+                        self.__searchReplaceScopeMenu.addItem("In Gaffer Scene")
+                        self.__searchReplaceScopeMenu._qtWidget().setMinimumWidth(spacing + 30)
+                        self.__searchReplaceScopeMenu._qtWidget().setMaximumWidth(spacing + 30)
+
+                        self.__searchReplaceButton = GafferUI.Button(text="Search and Replace")
+                        self.__searchReplaceButton.clickedSignal().connect(self.__findReplaceAction, scoped=False)
+                        self.__searchReplaceButton._qtWidget().setMaximumWidth(150)
 
 
     def __selectorAction(self , button ):
@@ -129,6 +153,18 @@ class ToolboxUI(GafferUI.Editor):
     def __setColourAction( self, button, buttonEvent):
 
         Toolbox.setNodeColourFromSwatch( self, button )
+
+    def __findReplaceAction(self, button):
+
+        search = self.__searchWidget.getText()
+        replace = self.__replaceWidget.getText()
+
+        searchType = self.__searchReplaceNodePlugsMenu.getItem( self.__searchReplaceNodePlugsMenu.getCurrentIndex() )
+        searchScope = self.__searchReplaceScopeMenu.getItem( self.__searchReplaceScopeMenu.getCurrentIndex() )
+
+        Toolbox.searchAndReplace(self, search, replace, searchType, searchScope )
+
+
 
 
 
